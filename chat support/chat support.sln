@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chat.Api", "Chat.Api\Chat.Api.csproj", "{006CC0AE-2223-4E5A-8E56-34CA14F09E42}"
+EndProject
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "Chat.Web", "Chat.Web\Chat.Web.njsproj", "{6122F2C3-76F3-4126-A67E-71A7E6FC39C4}"
+EndProject
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "Chat.Manager", "Chat.Manager\Chat.Manager.njsproj", "{E38B2DD2-D4B8-4F9E-B4BA-35CAE99067E6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{006CC0AE-2223-4E5A-8E56-34CA14F09E42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{006CC0AE-2223-4E5A-8E56-34CA14F09E42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{006CC0AE-2223-4E5A-8E56-34CA14F09E42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{006CC0AE-2223-4E5A-8E56-34CA14F09E42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6122F2C3-76F3-4126-A67E-71A7E6FC39C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6122F2C3-76F3-4126-A67E-71A7E6FC39C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6122F2C3-76F3-4126-A67E-71A7E6FC39C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6122F2C3-76F3-4126-A67E-71A7E6FC39C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E38B2DD2-D4B8-4F9E-B4BA-35CAE99067E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E38B2DD2-D4B8-4F9E-B4BA-35CAE99067E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E38B2DD2-D4B8-4F9E-B4BA-35CAE99067E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E38B2DD2-D4B8-4F9E-B4BA-35CAE99067E6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9C1250D3-F283-43D2-9E8F-6A8CFF7D6FE6}
+	EndGlobalSection
+EndGlobal
