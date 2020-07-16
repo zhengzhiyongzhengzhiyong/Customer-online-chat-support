@@ -1,0 +1,170 @@
+{
+  "id": "1698562",
+  "name": "vue-chat",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "5100253",
+      "name": "视频",
+      "font_class": "shipin",
+      "unicode": "e669",
+      "unicode_decimal": 58985
+    },
+    {
+      "icon_id": "4425816",
+      "name": "删除-方框",
+      "font_class": "shanchu-fangkuang",
+      "unicode": "e791",
+      "unicode_decimal": 59281
+    },
+    {
+      "icon_id": "4770755",
+      "name": "增加数字",
+      "font_class": "zengjiashuzi",
+      "unicode": "e641",
+      "unicode_decimal": 58945
+    },
+    {
+      "icon_id": "6129045",
+      "name": "9减、删除-线性方框",
+      "font_class": "jianshanchu-xianxingfangkuang",
+      "unicode": "e75a",
+      "unicode_decimal": 59226
+    },
+    {
+      "icon_id": "8358855",
+      "name": "增加4",
+      "font_class": "zengjia2",
+      "unicode": "e689",
+      "unicode_decimal": 59017
+    },
+    {
+      "icon_id": "5253606",
+      "name": "移除",
+      "font_class": "yichu",
+      "unicode": "e656",
+      "unicode_decimal": 58966
+    },
+    {
+      "icon_id": "1301395",
+      "name": "增加",
+      "font_class": "zengjia",
+      "unicode": "e668",
+      "unicode_decimal": 58984
+    },
+    {
+      "icon_id": "1272671",
+      "name": "移除",
+      "font_class": "delete-br",
+      "unicode": "e63d",
+      "unicode_decimal": 58941
+    },
+    {
+      "icon_id": "4581221",
+      "name": "发送中",
+      "font_class": "loading-solid",
+      "unicode": "e647",
+      "unicode_decimal": 58951
+    },
+    {
+      "icon_id": "3398713",
+      "name": "发送失败",
+      "font_class": "fasongshibai",
+      "unicode": "e62c",
+      "unicode_decimal": 58924
+    },
+    {
+      "icon_id": "6659620",
+      "name": "朋友",
+      "font_class": "pengyou1",
+      "unicode": "e631",
+      "unicode_decimal": 58929
+    },
+    {
+      "icon_id": "3315144",
+      "name": "邀请好友",
+      "font_class": "yaoqinghaoyou",
+      "unicode": "e61c",
+      "unicode_decimal": 58908
+    },
+    {
+      "icon_id": "6683016",
+      "name": "加好友",
+      "font_class": "jiahaoyou",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "795513",
+      "name": "视频",
+      "font_class": "ai-video",
+      "unicode": "e66b",
+      "unicode_decimal": 58987
+    },
+    {
+      "icon_id": "842937",
+      "name": "表情",
+      "font_class": "biaoqing",
+      "unicode": "e666",
+      "unicode_decimal": 58982
+    },
+    {
+      "icon_id": "2078817",
+      "name": "dkw_消息 ",
+      "font_class": "dkw_xiaoxi",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "2967254",
+      "name": "符号-电话",
+      "font_class": "dianhua",
+      "unicode": "e729",
+      "unicode_decimal": 59177
+    },
+    {
+      "icon_id": "4166140",
+      "name": "朋友",
+      "font_class": "pengyou",
+      "unicode": "e61a",
+      "unicode_decimal": 58906
+    },
+    {
+      "icon_id": "5582330",
+      "name": "搜索",
+      "font_class": "sousuo",
+      "unicode": "e659",
+      "unicode_decimal": 58969
+    },
+    {
+      "icon_id": "5893499",
+      "name": "退出",
+      "font_class": "tuichu",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
+    },
+    {
+      "icon_id": "7588121",
+      "name": "图片",
+      "font_class": "tupian",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
+      "icon_id": "10099699",
+      "name": "文件",
+      "font_class": "wenjian",
+      "unicode": "e61b",
+      "unicode_decimal": 58907
+    },
+    {
+      "icon_id": "10515201",
+      "name": "挂断",
+      "font_class": "guaduan",
+      "unicode": "e640",
+      "unicode_decimal": 58944
+    }
+  ]
+}

@@ -1,8 +1,18 @@
-import Vue from 'vue';
-import App from './App.vue';
+import Vue from 'vue'
+import App from './App'
+import router from './router'
+import store from './store'
+import './permission' // permission control
+Vue.config.productionTip = false
 
-Vue.config.productionTip = true;
-
-new Vue({
-    render: h => h(App)
-}).$mount('#app');
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+Vue.use(ElementUI);
+/* eslint-disable no-new */
+const vm = new Vue({
+  el: '#app',
+  router,
+  store,
+  template: '<App/>',
+  components: { App }
+})
