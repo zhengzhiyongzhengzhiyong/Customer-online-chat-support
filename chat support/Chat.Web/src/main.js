@@ -1,18 +1,22 @@
 import Vue from 'vue'
-import App from './App'
-import router from './router'
+import App from './App.vue'
 import store from './store'
-import './permission' // permission control
-Vue.config.productionTip = false
-
+import i18n from './locale'
+import router from './router'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+
+Vue.config.productionTip = false
+
+import '@/plugins/axios'
+import '@/plugins/filters'
+import '@/utils/permission.js'
+
 Vue.use(ElementUI);
-/* eslint-disable no-new */
-const vm = new Vue({
-  el: '#app',
-  router,
+
+new Vue({
   store,
-  template: '<App/>',
-  components: { App }
-})
+  i18n,
+  router,
+  render: h => h(App)
+}).$mount('#app')
