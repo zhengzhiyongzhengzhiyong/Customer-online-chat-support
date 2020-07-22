@@ -1,4 +1,5 @@
 const Login = resolve => require(['@/views/login/index'], resolve);
+
 const frameOut = [
   {
     path: '/login',
