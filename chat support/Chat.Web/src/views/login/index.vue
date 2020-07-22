@@ -8,7 +8,7 @@
                label-position="left">
         <div style="text-align: center">
         </div>
-        <h2 class="login-title color-main">mall-admin-web</h2>
+        <h2 class="login-title color-main">Chat Support Online</h2>
         <el-form-item prop="username">
           <el-input name="username"
                     type="text"
