@@ -33,7 +33,7 @@
           </el-input>
         </el-form-item>
         <el-form-item style="margin-bottom: 60px;text-align: center">
-          <el-button type="primary" :loading="loading" style="width:100%">
+          <el-button type="primary" :loading="loading" @click="handleLogin" style="width:100%">
             登录
           </el-button>
         </el-form-item>
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-
+    import { userLogin } from "@/api/index";
 export default {
     name: 'PasswordLogin',
     components: { },
@@ -81,15 +81,24 @@ export default {
 
     },
   methods: {
-    async handleLogin() {
-      const res = await this.$store.dispatch('user/login', this.loginForm)
-      if (res) {
-        this.loginForm = { username: '', password: '' }
-        setTimeout(() => {
-          this.$router.push(this.$route.query.redirect)
-          this.$toast.success('登录成功')
-        }, 200)
-      }
+      //async 
+      handleLogin() {
+
+          userLogin({
+              UserName: this.loginForm.username,
+              Password: this.loginForm.password
+          }).then(res => {
+              console.log(res);
+          });
+
+      //const res = await this.$store.dispatch('user/login', this.loginForm)
+      ////if (res) {
+      ////  this.loginForm = { username: '', password: '' }
+      ////  setTimeout(() => {
+      ////    this.$router.push(this.$route.query.redirect)
+      ////    this.$toast.success('登录成功')
+      ////  }, 200)
+      ////}
     }
   }
 }

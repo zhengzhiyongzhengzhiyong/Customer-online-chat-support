@@ -5,8 +5,8 @@ import axios from 'axios'
 import { getToken } from '@/utils/auth'
 
 const config = {
-  baseURL: 'http://luoyangc.cn:22330',
-  timeout: 60 * 1000
+    baseURL: 'http://localhost:51709/',
+    timeout: 60 * 1000
 }
 
 const _axios = axios.create(config)
