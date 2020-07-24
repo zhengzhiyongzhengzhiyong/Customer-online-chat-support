@@ -65,6 +65,12 @@
     <Content Include="src\utils\auth.js" />
     <Content Include="src\utils\index.js" />
     <Content Include="src\utils\permission.js" />
+    <Content Include="src\utils\signalR.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="src\views\chatroom\chatroom.vue">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="src\views\errors\404.vue" />
     <Content Include="src\views\login\index.vue" />
   </ItemGroup>
@@ -88,6 +94,7 @@
     <Folder Include="src\views\" />
     <Folder Include="src\views\errors\" />
     <Folder Include="src\views\login\" />
+    <Folder Include="src\views\chatroom\" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>
