@@ -12,7 +12,7 @@ using Microsoft.Extensions.Options;
 
 namespace Chat.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -32,7 +32,7 @@ namespace Chat.Api.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost("[action]")]
+        [HttpPost]
         public async Task<IActionResult> Login([FromBody]LoginRequest request)
         {
             var user = _userService.GetUserByName(request.UserName);
@@ -58,7 +58,7 @@ namespace Chat.Api.Controllers
         /// Get User Info
         /// </summary>
         /// <returns></returns>
-        [HttpGet("[action]")]
+        [HttpGet]
         [Authorize]
         public IActionResult GetUserInfo()
         {
