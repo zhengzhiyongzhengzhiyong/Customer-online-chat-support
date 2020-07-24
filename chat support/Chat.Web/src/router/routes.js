@@ -1,4 +1,5 @@
 const Login = resolve => require(['@/views/login/index'], resolve);
+const chatroom = resolve => require(['@/views/chatroom/chatroom'], resolve);
 
 const frameOut = [
   {
@@ -11,7 +12,13 @@ const frameOut = [
     path: '/',
     name: 'ToLogin',
     redirect: '/login'
-  }
+    },
+    {
+        path: '/chatroom',
+        name: '聊天室',
+        meta: { auth: 1, title: '聊天室' },
+        component: chatroom
+    }
 ]
 
 const errorPage = [
