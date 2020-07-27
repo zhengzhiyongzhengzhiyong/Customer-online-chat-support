@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -29,7 +30,6 @@ namespace Chat.Api
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -45,10 +45,10 @@ namespace Chat.Api
                 c.AddPolicy("AllRequests", policy =>
                 {
                     policy
-                    .AllowAnyOrigin()//允许任何源
-                    .AllowAnyMethod()//允许任何方式
-                    .AllowAnyHeader()//允许任何头
-                    .AllowCredentials();//允许cookie
+                    .WithOrigins("http://localhost:8080")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials();
                 });
                 c.AddPolicy("LimitRequests", policy =>
                 {
@@ -126,6 +126,13 @@ namespace Chat.Api
             });
             #endregion
 
+            var redisOptions = Configuration.GetSection("RedisOptions").Get<RedisOptions>();
+            services.AddRedisHelper(options => {
+                options.Configuration = redisOptions.Configuration;
+                options.InstanceName = redisOptions.InstanceName;
+            });
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -145,12 +152,14 @@ namespace Chat.Api
 
             app.UseAuthentication();
 
+            app.UseCors("AllRequests");
+
             app.UseSignalR(routes =>
             {
-                routes.MapHub<ChatHub>("/chatHub");
+                routes.MapHub<ChatHub>("/chathub");
             });
 
-            app.UseCors("AllRequests");
+
 
             app.UseMvc();
         }

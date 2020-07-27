@@ -1,4 +1,4 @@
-import { userLogin, getUserInfo } from '@/api'
+import { getUserInfo } from '@/api'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 
 const state = {
@@ -21,12 +21,11 @@ const mutations = {
 
 const actions = {
   // 用户登录
-  async login({ commit, dispatch }, form) {
-    const { data } = await userLogin(form)
+  async login({ commit, dispatch }, data) {
     if (data) {
       dispatch('setInfo')
-      commit('SET_TOKEN', data.token)
-      setToken(data.token)
+        commit('SET_TOKEN', data.auth_token)
+        setToken(data.auth_token)
       return data
     }
   },

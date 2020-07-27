@@ -55,6 +55,18 @@ namespace Chat.Api.Controllers
         }
 
         /// <summary>
+        /// 获取用户信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Authorize]
+        public IActionResult getUserInfo()
+        {
+            return new OkObjectResult(new data{ name="Jackson", avatar = "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/237/frame-with-picture_1f5bc.png" });
+        }
+
+
+        /// <summary>
         /// Get User Info
         /// </summary>
         /// <returns></returns>

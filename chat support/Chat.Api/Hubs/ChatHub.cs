@@ -8,11 +8,18 @@ using System.Threading.Tasks;
 namespace Chat.Api.Hubs
 {
     [Authorize]
-    public class ChatHub : Hub
+    public class ChatHub : Hub<IChatClient>
     {
-        public Task Send(string message)
+        /// <summary>
+        /// 重写 连接
+        /// </summary>
+        /// <returns></returns>
+        public override async Task OnConnectedAsync()
         {
-            return Clients.All.SendAsync("ReceiveMessage", $"{Context.UserIdentifier}: {message}");
+            //这里根据获取到的token获取信息 根据指定的数据进行分组 例如租户id
+            var groupName = "group_1";
+            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+            await Task.CompletedTask;
         }
     }
 }

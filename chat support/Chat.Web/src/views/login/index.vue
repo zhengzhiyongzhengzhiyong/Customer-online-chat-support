@@ -49,7 +49,7 @@ export default {
     components: { },
     data() {
       const validateUsername = (rule, value, callback) => {
-        if (value.length<5) {
+        if (value.length<2) {
           callback(new Error('请输入正确的用户名'))
         } else {
           callback()
@@ -81,25 +81,23 @@ export default {
 
     },
   methods: {
-      //async 
       handleLogin() {
-
           userLogin({
               UserName: this.loginForm.username,
               Password: this.loginForm.password
           }).then(res => {
-              console.log(res);
+              const flag = this.$store.dispatch('user/login', res);
+              if (flag) {
+                  this.$notify({
+                      message: '登录成功,正在跳转...',
+                      type: 'success'
+                  });
+                  setTimeout(() => {
+                      this.$router.push("/chatroom");
+                  }, 1500);
+              }
           });
-
-      //const res = await this.$store.dispatch('user/login', this.loginForm)
-      ////if (res) {
-      ////  this.loginForm = { username: '', password: '' }
-      ////  setTimeout(() => {
-      ////    this.$router.push(this.$route.query.redirect)
-      ////    this.$toast.success('登录成功')
-      ////  }, 200)
-      ////}
-    }
+      }
   }
 }
 </script>
