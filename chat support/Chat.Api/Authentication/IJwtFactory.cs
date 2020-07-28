@@ -9,7 +9,7 @@ namespace Chat.Api.Authentication
 {
     public interface IJwtFactory
     {
-        Task<string> GenerateEncodedToken(string userName, string refreshToken, ClaimsIdentity identity);
+        Task<string> GenerateEncodedToken(string userName, ClaimsIdentity identity);
         ClaimsIdentity GenerateClaimsIdentity(User user);
     }
 }

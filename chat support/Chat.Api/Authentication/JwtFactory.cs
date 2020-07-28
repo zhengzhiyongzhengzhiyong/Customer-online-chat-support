@@ -21,7 +21,7 @@ namespace Chat.Api.Authentication
             ThrowIfInvalidOptions(_jwtOptions);
         }
 
-        public async Task<string> GenerateEncodedToken(string userName, string refreshToken, ClaimsIdentity identity)
+        public async Task<string> GenerateEncodedToken(string userName, ClaimsIdentity identity)
         {
             var claims = new List<Claim>
             {
@@ -31,9 +31,9 @@ namespace Chat.Api.Authentication
                 identity.FindFirst(ClaimTypes.Name),
                 identity.FindFirst("id")
             };
+
             claims.AddRange(identity.FindAll(ClaimTypes.Role));
 
-            // Create the JWT security token and encode it.
             var jwt = new JwtSecurityToken(
                 issuer: _jwtOptions.Issuer,
                 audience: _jwtOptions.Audience,
@@ -44,16 +44,7 @@ namespace Chat.Api.Authentication
 
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
-            var response = new
-            {
-                auth_token = encodedJwt,
-                refresh_token = refreshToken,
-                expires_in = (int)_jwtOptions.ValidFor.TotalSeconds,
-                token_type = "Bearer"
-            };
-
-            //return JsonConvert.SerializeObject(response);
-            return JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented });
+            return encodedJwt;
         }
 
         public ClaimsIdentity GenerateClaimsIdentity(User user)
@@ -68,7 +59,6 @@ namespace Chat.Api.Authentication
             return claimsIdentity;
         }
 
-        /// <returns>Date converted to seconds since Unix epoch (Jan 1, 1970, midnight UTC).</returns>
         private static long ToUnixEpochDate(DateTime date)
           => (long)Math.Round((date.ToUniversalTime() -
                                new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero))

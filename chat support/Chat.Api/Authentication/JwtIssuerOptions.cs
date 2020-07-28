@@ -38,10 +38,7 @@ namespace Chat.Api.Authentication
         /// </summary>
         public DateTime IssuedAt => DateTime.UtcNow;
 
-        /// <summary>
-        /// Set the timespan the token will be valid for (default is 10 min)
-        /// </summary>
-        public TimeSpan ValidFor { get; set; } = TimeSpan.FromMinutes(10);
+        public TimeSpan ValidFor { get; set; } = TimeSpan.FromHours(2);
         /// <summary>
         /// "jti" (JWT ID) Claim (default ID is a GUID)
         /// </summary>

@@ -25,10 +25,8 @@
             <template v-slot:header>
                 XX公司
             </template>
-            <template v-slot:user-avatar="{ message, user }">
-                <div style="border-radius:50%; color: pink; font-size: 15px; line-height:25px; text-align:center;background: tomato; width: 25px !important; height: 25px !important; min-width: 30px;min-height: 30px;margin: 5px; font-weight:bold" v-if="message.type === 'text' && user && user.name">
-                    {{user.name.toUpperCase()[0]}}
-                </div>
+            <template v-slot:system-message-body="{ message }">
+              提示： {{message.text}}
             </template>
         </beautiful-chat>
     </div>
@@ -38,7 +36,7 @@
     import OpenIcon from 'vue-beautiful-chat/src/assets/logo-no-bg.svg'
     import FileIcon from 'vue-beautiful-chat/src/assets/file.svg'
     import CloseIconSvg from 'vue-beautiful-chat/src/assets/close.svg'
-    import api from '@/api';
+    import { getSupport } from '@/api';
     export default{
         name: 'chatroom',
         components: {
@@ -65,7 +63,12 @@
                 },
                 participants: [
                     {
-                        id: 'user1',
+                        id: 'me',
+                        name: 'text',
+                        imageUrl: 'https://avatars3.githubusercontent.com/u/1915989?s=230&v=4'
+                    },
+                    {
+                        id: 'Jackson',
                         name: 'text',
                         imageUrl: 'https://avatars3.githubusercontent.com/u/1915989?s=230&v=4'
                     }
@@ -73,7 +76,7 @@
                 titleImageUrl: 'https://a.slack-edge.com/66f9/img/avatars-teams/ava_0001-34.png',
                 messageList: [
                     { type: 'text', author: `me`, data: { text: `Say yes!` } },
-                    { type: 'text', author: `user1`, data: { text: `` } }
+
                 ], 
                 newMessagesCount: 0,
                 isChatOpen: false,
@@ -108,61 +111,76 @@
             }
         },
         created() {
-            Header
+            this.ComputeCount();
+            this.CreateOn();
+            this.GetSupport();
+            //this.sendMessage("请问您有什么要咨询的吗？");
         },
-        sockets:{
+        sockets: {       
         },
         watch: {
         },
         computed: {
         },
         methods: {
-            CreateOn() {
-                //ReceiveMessage和Clients.All.SendAsync中的第一个参数对应
+            GetSupport() {
+                getSupport({
+                }).then(res => {
+                  
+                    this.participants = res.data;
+                    //console.log(res);
+                });
+            },
+            CreateOn() {               
                 this.signalr.on('ReceiveMessage', res => {
-                    //可以写业务逻辑
-                    //res 返回的是后台传过来的数据
                     console.log(res);
                 })
             },
-            SendMessage() {
-                var user = "123";
-                var message = "123";
-                //SendMessage和后台方法对应
-                this.signalr.invoke("SendMessage", user, message).catch(function (err) {
+            Sendsdfdfe() {
+                var user = "2";
+                var message = "test";
+                this.signalr.invoke("SendChatMessage", user, message).catch(function (err) {
                     console.error(err.toString());
                 });
+            },
+            ComputeCount() {
+                this.signalr.on('OnlineCount', res => {
+                    console.log(res);
+                })
             },
             sendMessage(text) {
                 if (text.length > 0) {
                     this.newMessagesCount = this.isChatOpen ? this.newMessagesCount : this.newMessagesCount + 1
-                    this.onMessageWasSent({ author: 'support', type: 'text', data: { text } })
+                    this.onMessageWasSent({ type: 'text', author: `Jackson`, data: { text: '<a>123123</a>' } })
                 }
             },
             onMessageWasSent(message) {
-                // called when the user sends a message
-                this.messageList = [...this.messageList, message]
+                let userid = this.participants[0].id;
+                console.log(message);
+                this.signalr.invoke("SendChatMessage", userid, message).catch(function (err) {
+                    console.error(err);
+                });
+                //console.log(message);
+
+                //this.messageList = [...this.messageList, message]
             },
             openChat() {
-                // called when the user clicks on the fab button to open the chat
                 this.isChatOpen = true
                 this.newMessagesCount = 0
             },
             closeChat() {
-                // called when the user clicks on the botton to close the chat
                 this.isChatOpen = false
             },
             handleScrollToTop() {
-                // called when the user scrolls message list to top
-                // leverage pagination for loading another page of messages
             },
             handleOnType() {
-                console.log('Emit typing event')
+                
             },
             editMessage(message) {
                 const m = this.messageList.find(m => m.id === message.id);
                 m.isEdited = true;
                 m.data.text = message.data.text;
+                //console.log(message);
             }
         },
         mounted() {
@@ -180,7 +198,7 @@
                 }
                 else {
                     this.$message.error('连接服务器失败');
-                    console.error(error.message);
+                    console.error(error);
                 }
             });
         }

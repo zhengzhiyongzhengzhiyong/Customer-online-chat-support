@@ -6,20 +6,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Chat.Api.Controllers
+namespace Chat.Api.Hubs
 {
     public class ConnectionList : IReadOnlyCollection<User>
     {
         /// <summary>
         /// 在线连接的集合
         /// </summary>
-        private readonly ConcurrentDictionary<int, User> _connections = new ConcurrentDictionary<int, User>();
+        private readonly ConcurrentDictionary<string, User> _connections = new ConcurrentDictionary<string, User>();
         /// <summary>
         /// 用户Id对应的用户对象
         /// </summary>
         /// <param name="userId">用户Id</param>
         /// <returns></returns>
-        public User this[int userId]
+        public User this[string userId]
         {
             get
             {
@@ -46,7 +46,7 @@ namespace Chat.Api.Controllers
         /// 移除用户
         /// </summary>
         /// <param name="userId">用户Id</param>
-        public void Remove(int userId)
+        public void Remove(string userId)
         {
             _connections.TryRemove(userId, out var dummy);
         }

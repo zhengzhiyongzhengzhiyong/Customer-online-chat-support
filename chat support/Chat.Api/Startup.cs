@@ -3,18 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Chat.Api.Authentication;
+using Chat.Api.Controllers;
 using Chat.Api.Hubs;
 using Chat.Api.TestData;
+using Chat.Common.Redis;
+using Microsoft.AspNet.SignalR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.CodeAnalysis.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using IUserIdProvider = Microsoft.AspNetCore.SignalR.IUserIdProvider;
 
 namespace Chat.Api
 {
@@ -40,6 +45,18 @@ namespace Chat.Api
 
             services.AddTransient<IUserService, UserService>();
 
+            //redis缓存
+            var section = Configuration.GetSection("Redis:Default");
+            string _connectionString = section.GetSection("Connection").Value;
+            string _instanceName = section.GetSection("InstanceName").Value;
+            services.AddSingleton(new RedisHelper(_connectionString, _instanceName));
+
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = section.GetSection("Connection").Value;
+                options.InstanceName = "CacheInstance";
+            });
+
             services.AddCors(c =>
             {
                 c.AddPolicy("AllRequests", policy =>
@@ -49,13 +66,6 @@ namespace Chat.Api
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials();
-                });
-                c.AddPolicy("LimitRequests", policy =>
-                {
-                    policy
-                    .WithOrigins("http://127.0.0.1:1818", "http://localhost:1818")
-                    .AllowAnyHeader()
-                    .AllowAnyMethod();
                 });
             });
 
@@ -116,7 +126,10 @@ namespace Chat.Api
                         var accessToken = context.Request.Query["access_token"];
 
                         if (!string.IsNullOrEmpty(accessToken) && (context.HttpContext.Request.Path.StartsWithSegments("/chatHub")))
-                        //(context.HttpContext.WebSockets.IsWebSocketRequest || context.Request.Headers["Accept"] == "text/event-stream"))
+                        {
+                            context.Token = accessToken;
+                        }
+                        else if (!string.IsNullOrEmpty(accessToken) && (context.HttpContext.Request.Path.StartsWithSegments("/chatroom")))
                         {
                             context.Token = accessToken;
                         }
@@ -126,13 +139,9 @@ namespace Chat.Api
             });
             #endregion
 
-            var redisOptions = Configuration.GetSection("RedisOptions").Get<RedisOptions>();
-            services.AddRedisHelper(options => {
-                options.Configuration = redisOptions.Configuration;
-                options.InstanceName = redisOptions.InstanceName;
-            });
-
-            services.AddSignalR();
+            services.AddSingleton(typeof(ConnectionList));
+            services.AddSingleton<IUserIdProvider, SignalRUserIdProvider>();
+            services.AddSignalR(options=> { options.EnableDetailedErrors = true; });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -142,6 +151,8 @@ namespace Chat.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+
 
             app.UseStaticFiles();
 
@@ -157,6 +168,7 @@ namespace Chat.Api
             app.UseSignalR(routes =>
             {
                 routes.MapHub<ChatHub>("/chathub");
+                routes.MapHub<ChatRoom>("/chatroom");
             });
 
 

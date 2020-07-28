@@ -6,9 +6,14 @@ using System.Threading.Tasks;
 using Chat.Api.Authentication;
 using Chat.Api.Models;
 using Chat.Api.TestData;
+using Chat.Common;
+using Chat.Common.Redis;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using StackExchange.Redis;
 
 namespace Chat.Api.Controllers
 {
@@ -19,12 +24,49 @@ namespace Chat.Api.Controllers
         private readonly IJwtFactory _jwtFactory;
         private readonly JwtIssuerOptions _jwtOptions;
         private readonly IUserService _userService;
+        private IDistributedCache _cache;
+        private readonly IDatabase _redis;
 
-        public AuthController(IJwtFactory jwtFactory, IOptions<JwtIssuerOptions> jwtOptions, IUserService userService)
+        public AuthController(RedisHelper client,IJwtFactory jwtFactory, IOptions<JwtIssuerOptions> jwtOptions, IUserService userService, IDistributedCache cache)
         {
             _jwtFactory = jwtFactory;
             _jwtOptions = jwtOptions.Value;
             _userService = userService;
+            _cache = cache;
+            _redis = client.GetUserDB();
+        }
+
+        /// <summary>
+        /// 测试缓存
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("Index")]
+        public async Task<ActionResult<string>> SetTime()
+        {
+            var CurrentTime = DateTime.Now.ToString();
+            await this._cache.SetStringAsync("CurrentTime", CurrentTime);
+            return CurrentTime;
+        }
+
+        /// <summary>
+        /// 测试缓存
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetTime")]
+        public async Task<ActionResult<string>> GetTime()
+        {
+            var CurrentTime = await this._cache.GetStringAsync("CurrentTime");
+            return CurrentTime;
+        }
+
+        [HttpPost]
+        public IActionResult GetSupport()
+        {
+            List<chater> chaters = new List<chater>();
+            chaters.Add(new chater { id = "5a418c17-0193-4f1f-bf64-fe143385d4bd", name = "Support", imageUrl = "https://avatars3.githubusercontent.com/u/1915989?s=230&v=4" });
+            chaters.Add(new chater { id = "dbd6f4e8-9867-43c9-ae36-5839c990d6fb", name = "me", imageUrl = "https://avatars3.githubusercontent.com/u/1915989?s=230&v=4" });
+            var result = JsonConvert.SerializeObject(new { data = chaters }, new JsonSerializerSettings { Formatting = Formatting.Indented });
+            return new OkObjectResult(result);
         }
 
         /// <summary>
@@ -47,11 +89,19 @@ namespace Chat.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            string refreshToken = Guid.NewGuid().ToString();
             var claimsIdentity = _jwtFactory.GenerateClaimsIdentity(user);
 
-            var token = await _jwtFactory.GenerateEncodedToken(user.UserName, refreshToken, claimsIdentity);
-            return new OkObjectResult(token);
+            var token = await _jwtFactory.GenerateEncodedToken(user.UserName, claimsIdentity);
+
+            await _redis.StringSetAsync(user.Id.ToString(), JsonConvert.SerializeObject(user), TimeSpan.FromHours(2));
+
+            var response = new
+            {
+                auth_token = token,
+                token_type = "Bearer"
+            };
+            var result = JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented });
+            return new OkObjectResult(result);
         }
 
         /// <summary>

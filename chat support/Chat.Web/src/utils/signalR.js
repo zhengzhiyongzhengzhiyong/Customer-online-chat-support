@@ -7,7 +7,7 @@ let options = {
 };
 
 const connection  = new signalR.HubConnectionBuilder()
-    .withUrl('http://localhost:51709/chathub', options)
+    .withUrl('http://localhost:51709/chatroom', options)
     .configureLogging(signalR.LogLevel.Information)
     .build();
 export default {

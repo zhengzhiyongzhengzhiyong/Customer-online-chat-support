@@ -15,8 +15,7 @@ namespace Chat.Api.TestData
     {
         public List<string> GetFunctionsByUserId(int id)
         {
-            var user = TestUsers.Users.SingleOrDefault(r => r.Id.Equals(id));
-            return user?.Urls;
+            return null;
         }
 
         public User GetUserByName(string name)
