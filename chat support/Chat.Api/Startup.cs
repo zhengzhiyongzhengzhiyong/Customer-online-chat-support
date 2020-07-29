@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Chat.Api.Authentication;
 using Chat.Api.Controllers;
+using Chat.Api.Extensions;
 using Chat.Api.Hubs;
 using Chat.Api.TestData;
 using Chat.Common.Redis;
@@ -139,7 +140,10 @@ namespace Chat.Api
             });
             #endregion
 
+            services.UserMongoLog(Configuration.GetSection("Mongo.Log"));
+
             services.AddSingleton(typeof(ConnectionList));
+
             services.AddSingleton<IUserIdProvider, SignalRUserIdProvider>();
 
             services.AddSignalR(options=> { options.EnableDetailedErrors = true; });

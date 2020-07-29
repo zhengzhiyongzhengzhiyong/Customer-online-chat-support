@@ -10,6 +10,7 @@ const connection  = new signalR.HubConnectionBuilder()
     .withUrl('http://localhost:51709/chatroom', options)
     .configureLogging(signalR.LogLevel.Information)
     .build();
+
 export default {
     install: function (Vue) {
         Vue.prototype.signalr = connection

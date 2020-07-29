@@ -110,6 +110,9 @@
                 messageStyling: true
             }
         },
+        beforeCreate() {
+            
+        },
         created() {
             this.ComputeCount();
             this.CreateOn();
@@ -156,7 +159,6 @@
             },
             onMessageWasSent(message) {
                 let userid = this.participants[0].id;
-                console.log(message);
                 this.signalr.invoke("SendChatMessage", userid, message).catch(function (err) {
                     console.error(err);
                 });
@@ -178,27 +180,37 @@
                 const m = this.messageList.find(m => m.id === message.id);
                 m.isEdited = true;
                 m.data.text = message.data.text;
-                //console.log(message);
+            },
+            start() {
+                this.signalr.start().then(() => {
+                    console.log('connect successfully');
+                }).catch(error => {
+                    if (error.statusCode === 401) {
+                        this.$message({
+                            message: '登录已过期,请重新登录',
+                            type: 'warning'
+                        });
+                        setTimeout(() => {
+                            this.$router.push("/login");
+                        }, 1500);
+                    }
+                    else {
+                        console.error(error);
+                    }
+                });
+            },
+            ConnectSignlr() {
+                this.start();
+                this.signalr.onclose(()=>{
+                    setTimeout( ()=> {
+                        console.info('restart connection');
+                        this.start();
+                    }, 500); 
+                });
             }
         },
         mounted() {
-            this.signalr.start().then(() => {
-                console.log('连接成功');
-            }).catch(error =>{
-                if (error.statusCode === 401) {
-                    this.$message({
-                        message: '登录已过期,请重新登录',
-                        type: 'warning'
-                    });
-                    setTimeout(() => {
-                        this.$router.push("/login");
-                    }, 1500);
-                }
-                else {
-                    this.$message.error('连接服务器失败');
-                    console.error(error);
-                }
-            });
+            this.ConnectSignlr();
         }
     }
 </script>

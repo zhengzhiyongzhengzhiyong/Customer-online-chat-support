@@ -4,4 +4,9 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Chat.IServices\Chat.IServices.csproj" />
+    <ProjectReference Include="..\Chat.Models\Chat.Models.csproj" />
+  </ItemGroup>
+
 </Project>
