@@ -68,8 +68,8 @@
                         imageUrl: 'https://avatars3.githubusercontent.com/u/1915989?s=230&v=4'
                     },
                     {
-                        id: 'Jackson',
-                        name: 'text',
+                        id: '1',
+                        name: 'Support',
                         imageUrl: 'https://avatars3.githubusercontent.com/u/1915989?s=230&v=4'
                     }
                 ], 
@@ -125,15 +125,15 @@
         methods: {
             GetSupport() {
                 getSupport({
-                }).then(res => {
-                  
+                }).then(res => {                  
                     this.participants = res.data;
-                    //console.log(res);
                 });
             },
             CreateOn() {               
                 this.signalr.on('ReceiveMessage', res => {
                     console.log(res);
+                    this.newMessagesCount = this.isChatOpen ? this.newMessagesCount : this.newMessagesCount + 1
+                    this.messageList = [...this.messageList, res]
                 })
             },
             Sendsdfdfe() {
@@ -160,9 +160,7 @@
                 this.signalr.invoke("SendChatMessage", userid, message).catch(function (err) {
                     console.error(err);
                 });
-                //console.log(message);
-
-                //this.messageList = [...this.messageList, message]
+                this.messageList = [...this.messageList, message]
             },
             openChat() {
                 this.isChatOpen = true

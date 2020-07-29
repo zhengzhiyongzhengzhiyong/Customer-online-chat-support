@@ -8,9 +8,10 @@ namespace Chat.Api.Hubs
 {
     public class SignalRUserIdProvider : IUserIdProvider
     {
-        public string GetUserId(HubConnectionContext connection)
+        public virtual string GetUserId(HubConnectionContext connection)
         {
-            return Convert.ToString(connection.User.FindFirst("id"));
+            string tempstr = connection.User.FindFirst("id").Value;
+            return Convert.ToString(tempstr);
         }
     }
 }

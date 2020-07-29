@@ -141,6 +141,7 @@ namespace Chat.Api
 
             services.AddSingleton(typeof(ConnectionList));
             services.AddSingleton<IUserIdProvider, SignalRUserIdProvider>();
+
             services.AddSignalR(options=> { options.EnableDetailedErrors = true; });
         }
 
