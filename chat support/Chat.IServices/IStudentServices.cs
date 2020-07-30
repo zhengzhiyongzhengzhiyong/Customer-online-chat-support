@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Chat.IServices
 {
-    public interface IPermissionSystemLogsServices :IBaseService<PermissionSystemLogs>
+    public interface IStudentServices :IBaseService<Student>
     {
     }
 }

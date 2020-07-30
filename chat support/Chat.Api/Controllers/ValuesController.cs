@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Chat.IServices;
+using Chat.Models;
 
 namespace Chat.Api.Controllers
 {
@@ -10,11 +12,24 @@ namespace Chat.Api.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        // GET api/values
-        [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public  IStudentServices _studentService;
+
+        public ValuesController(IStudentServices StudentServices)
         {
-            return new string[] { "value1", "value2" };
+            _studentService = StudentServices;
+        }
+
+        [HttpGet]
+        public ActionResult<string> Get()
+        {
+            Student sutdent1 = new Student()
+            {
+                Age = 18,
+                Name = "Jackson",
+                IsDelete = false
+            };
+            _studentService.Create(sutdent1);
+            return "done";
         }
 
         // GET api/values/5

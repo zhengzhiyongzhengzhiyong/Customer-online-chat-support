@@ -17,15 +17,12 @@ namespace Chat.Services
 {
     public class BaseService<T> : IBaseService<T> where T : BaseModel
     {
-        private readonly IMongoCollection<T> _collection; 
+        private readonly  IMongoCollection<T> _collection;
 
-        public BaseService(IConfiguration config, string tableName)
+        public BaseService(MongoContext MongoContext)
         {
-            var client = new MongoClient(config.GetConnectionString("MongoDBDemo"));  
-
-            var database = client.GetDatabase(config.GetSection("MongoDBSetting:DBName").Value);  
-
-            _collection = database.GetCollection<T>(tableName);   
+            var database = MongoContext._db;
+            _collection = database.GetCollection<T>(typeof(T).Name);
         }
 
         public List<T> Get()

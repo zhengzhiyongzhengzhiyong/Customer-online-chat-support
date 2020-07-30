@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Autofac.Extras.DynamicProxy;
 using Chat.Api.Authentication;
 using Chat.Api.Controllers;
 using Chat.Api.Extensions;
@@ -27,8 +32,10 @@ namespace Chat.Api
     public class Startup
     {
 
-        private const string SecretKey = "iNivDmHLpUA223sqsfhqGbMRdRj1PVkH"; // todo: get this from somewhere secure
+        private const string SecretKey = "iNivDmHLpUA223sqsfhqGbMRdRj1PVkH"; 
+
         private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(SecretKey));
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -36,7 +43,7 @@ namespace Chat.Api
 
         public IConfiguration Configuration { get; }
 
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -46,10 +53,12 @@ namespace Chat.Api
 
             services.AddTransient<IUserService, UserService>();
 
-            //redis缓存
             var section = Configuration.GetSection("Redis:Default");
+
             string _connectionString = section.GetSection("Connection").Value;
+
             string _instanceName = section.GetSection("InstanceName").Value;
+
             services.AddSingleton(new RedisHelper(_connectionString, _instanceName));
 
             services.AddStackExchangeRedisCache(options =>
@@ -70,7 +79,6 @@ namespace Chat.Api
                 });
             });
 
-            #region Swagger
             services.AddSwaggerGen(options => {
                 options.DescribeAllEnumsAsStrings();
                 options.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
@@ -88,9 +96,7 @@ namespace Chat.Api
                     In = "header"
                 });
             });
-            #endregion
 
-            #region Jwt token Authentication
             var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtIssuerOptions));
             services.Configure<JwtIssuerOptions>(options =>
             {
@@ -138,15 +144,39 @@ namespace Chat.Api
                     }
                 };
             });
-            #endregion
 
-            services.UserMongoLog(Configuration.GetSection("Mongo.Log"));
+            services.UserMongoLog(Configuration.GetSection("Mongodb"));
 
             services.AddSingleton(typeof(ConnectionList));
 
             services.AddSingleton<IUserIdProvider, SignalRUserIdProvider>();
 
             services.AddSignalR(options=> { options.EnableDetailedErrors = true; });
+
+            var builder = new ContainerBuilder();
+
+            //var basePath = Microsoft.DotNet.PlatformAbstractions.ApplicationEnvironment.ApplicationBasePath;
+            //try
+            //{
+            //    var IservicesDllFile = Path.Combine(basePath, "Chat.IServices.dll");
+            //    var servicesDllFile = Path.Combine(basePath, "Chat.Services.dll");
+            //    var assemblysServices = Assembly.LoadFile(servicesDllFile);
+            //    var assemblysIServices = Assembly.LoadFile(IservicesDllFile);
+            //    builder.RegisterAssemblyTypes(assemblysServices, assemblysIServices)
+            //                    .AsImplementedInterfaces();
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw new Exception("※※★※※ 如果你是第一次下载项目，请先F6编译，然后再F5执行，因为解耦了，如果你是发布的模式，请检查bin文件夹是否存在Chat.Services.dll ※※★※※");
+            //}
+
+            builder.RegisterType<Chat.Services.StudentServices>().As<Chat.IServices.IStudentServices>().SingleInstance();
+
+            builder.Populate(services);
+
+            var ApplicationContainer = builder.Build();
+
+            return new AutofacServiceProvider(ApplicationContainer);//第三方IOC接管 core内置DI容器
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -156,8 +186,6 @@ namespace Chat.Api
             {
                 app.UseDeveloperExceptionPage();
             }
-
-
 
             app.UseStaticFiles();
 
@@ -175,8 +203,6 @@ namespace Chat.Api
                 routes.MapHub<ChatHub>("/chathub");
                 routes.MapHub<ChatRoom>("/chatroom");
             });
-
-
 
             app.UseMvc();
         }
