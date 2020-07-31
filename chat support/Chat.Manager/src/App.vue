@@ -1,20 +1,19 @@
 <template>
-    <div id="app">
-        <Home msg="Hello world!" />
-    </div>
+  <div id="app">
+    <transition>
+      <keep-alive>
+        <router-view></router-view>
+      </keep-alive>
+    </transition>
+  </div>
 </template>
 
-<script>
-    import Home from './components/Home.vue';
-
-    export default {
-        name: 'app',
-        components: {
-            Home
-        }
-    };
-</script>
-
 <style>
+html,body,#app {
+  width: 100%;
+  height: 100%;
+  background-color: #F3F6F8;
+  margin: 0px;
+  padding: 0px;
+}
 </style>
-
