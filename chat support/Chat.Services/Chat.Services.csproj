@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\Chat.Api\bin\</OutputPath>
+    <OutputPath>..\Chat.Api\bin\Debug</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>

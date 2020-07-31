@@ -11,6 +11,7 @@ using Chat.Api.Authentication;
 using Chat.Api.Controllers;
 using Chat.Api.Extensions;
 using Chat.Api.Hubs;
+using Chat.Api.Middleware;
 using Chat.Api.TestData;
 using Chat.Common.Redis;
 using Microsoft.AspNet.SignalR;
@@ -155,31 +156,28 @@ namespace Chat.Api
 
             var builder = new ContainerBuilder();
 
-            //var basePath = Microsoft.DotNet.PlatformAbstractions.ApplicationEnvironment.ApplicationBasePath;
-            //try
-            //{
-            //    var IservicesDllFile = Path.Combine(basePath, "Chat.IServices.dll");
-            //    var servicesDllFile = Path.Combine(basePath, "Chat.Services.dll");
-            //    var assemblysServices = Assembly.LoadFile(servicesDllFile);
-            //    var assemblysIServices = Assembly.LoadFile(IservicesDllFile);
-            //    builder.RegisterAssemblyTypes(assemblysServices, assemblysIServices)
-            //                    .AsImplementedInterfaces();
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw new Exception("※※★※※ 如果你是第一次下载项目，请先F6编译，然后再F5执行，因为解耦了，如果你是发布的模式，请检查bin文件夹是否存在Chat.Services.dll ※※★※※");
-            //}
-
-            builder.RegisterType<Chat.Services.StudentServices>().As<Chat.IServices.IStudentServices>().SingleInstance();
+            var basePath = Microsoft.DotNet.PlatformAbstractions.ApplicationEnvironment.ApplicationBasePath;
+            try
+            {
+                var IservicesDllFile = Path.Combine(basePath, "Chat.IServices.dll");
+                var servicesDllFile = Path.Combine(basePath, "Chat.Services.dll");
+                var assemblysServices = Assembly.LoadFile(servicesDllFile);
+                var assemblysIServices = Assembly.LoadFile(IservicesDllFile);
+                builder.RegisterAssemblyTypes(assemblysServices, assemblysIServices)
+                                .AsImplementedInterfaces();
+            }
+            catch (Exception)
+            {
+                throw new Exception("※※★※※ 请先 build Chat.Services.dll，然后,检查bin文件夹是否存在Chat.Services.dll ※※★※※");
+            }
 
             builder.Populate(services);
 
             var ApplicationContainer = builder.Build();
 
-            return new AutofacServiceProvider(ApplicationContainer);//第三方IOC接管 core内置DI容器
+            return new AutofacServiceProvider(ApplicationContainer);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -193,6 +191,8 @@ namespace Chat.Api
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
             });
+
+            app.UseGlobalErrorHandlingMiddleware();
 
             app.UseAuthentication();
 
