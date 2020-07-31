@@ -15,12 +15,12 @@ namespace Chat.Api.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        public  IStudentServices _studentService;
+        public  IManagerServices _managerService;
         private readonly ILogger<ValuesController> _logger;
         private readonly Logger logger = LogManager.GetLogger("dblog");
-        public ValuesController(IStudentServices StudentServices, ILogger<ValuesController> logger)
+        public ValuesController(IManagerServices ManagerServices, ILogger<ValuesController> logger)
         {
-            _studentService = StudentServices;
+            _managerService = ManagerServices;
             _logger = logger;
         }
 
@@ -33,7 +33,7 @@ namespace Chat.Api.Controllers
                 Name = "Jackson",
                 IsDelete = false
             };
-            _studentService.Create(sutdent1);
+            _managerService.Create(sutdent1);
             logger.Debug("sutdent add successfully");
             _logger.LogDebug("sutdent add successfully");
             return "done";

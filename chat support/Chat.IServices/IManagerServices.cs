@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Chat.IServices
 {
-    public interface IStudentServices :IBaseService<Student>
+    public interface IManagerServices :IBaseService<Student>
     {
     }
 }

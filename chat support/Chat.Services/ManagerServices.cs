@@ -7,9 +7,9 @@ using System.Text;
 
 namespace Chat.Services
 {
-    public class StudentServices : BaseService<Student>, IStudentServices
+    public class ManagerServices : BaseService<Student>, IManagerServices
     {
-        public StudentServices(MongoContext MongoContext) : base(MongoContext)
+        public ManagerServices(MongoContext MongoContext) : base(MongoContext)
         {
         }
     }
