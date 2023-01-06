@@ -22,8 +22,8 @@
   },
   "devDependencies": {
     "@babel/register": "^7.5.5",
-    "@vue/cli-plugin-babel": "^3.8.0",
-    "@vue/cli-service": "^3.8.0",
+    "@vue/cli-plugin-babel": "^5.0.8",
+    "@vue/cli-service": "^5.0.8",
     "chalk": "^2.4.2",
     "husky": "^3.0.5",
     "node-sass": "^4.14.1",
